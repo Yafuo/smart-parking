@@ -1,0 +1,286 @@
+<div class="wrap-content">
+  <mat-sidenav-container class="example-container" (backdropClick)="sidenav.close()">
+    <mat-sidenav class="bg-dark" #sidenav>
+      <fa-icon (click)="sidenav.close()" [icon]="faChevronLeft" size="2x" [styles]="{'color': 'white'}"></fa-icon>
+      <div class="sidenav-opt text-white" (click)="navTo(l.opt)" *ngFor="let l of list; index as i">
+        <fa-icon [icon]="l.icon"></fa-icon>
+        {{l.opt| translate}}
+        <div (click)="_setLang(d.code)" class="sidenav-opt-details text-white" *ngFor="let d of l.details">
+          {{d.name | translate}}
+        </div>
+      </div>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <div class="mobile-wrapper">
+        <div class="wrap-tools row mr-0">
+          <mat-form-field class="pl-4 col-8">
+            <input matInput type="text" placeholder="{{'Search' | translate}} ..." [formControl]="allSearch"
+                   [matAutocomplete]="all">
+            <mat-icon class="search-fn" matSuffix (click)="_searchStation()">search</mat-icon>
+            <mat-autocomplete autoActiveFirstOption #all="matAutocomplete">
+              <mat-option *ngFor="let d of filterAllSearchList | async" [value]="d.stationAddress">
+                {{d.stationAddress | translate}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+          <span class="col-4 text-center pt-2 p-0">
+            <button class="filter-btn" mat-stroked-button color="primary" (click)="toggleFilter()"><mat-icon matPrefix>filter_list</mat-icon>
+              {{'Filter' | translate}}</button>
+          </span>
+
+        </div>
+        <div hidden class="wrap-maps">
+          <div>
+          <aol-map [height]="'300px'" [width]="'100%'">
+            <aol-view [zoom]="18">
+              <aol-coordinate [x]="106.632522" [y]="10.806412" [srid]="'EPSG:4326'"></aol-coordinate>
+            </aol-view>
+            <aol-layer-tile>
+              <aol-source-osm></aol-source-osm>
+            </aol-layer-tile>
+            <aol-layer-vector [opacity]="1">
+              <aol-source-vector>
+                <aol-feature>
+                  <aol-geometry-point>
+                    <aol-coordinate [x]="106.632522" [y]="10.806412" [srid]="'EPSG:4326'"></aol-coordinate>
+                  </aol-geometry-point>
+                  <aol-style>
+                    <aol-style-circle [radius]="10">
+                      <aol-style-stroke [color]="'black'"></aol-style-stroke>
+                      <aol-style-fill [color]="'green'"></aol-style-fill>
+                    </aol-style-circle>
+                  </aol-style>
+                </aol-feature>
+                <aol-feature>
+                  <aol-geometry-point>
+                    <aol-coordinate [x]="106.632522" [y]="10.806412" [srid]="'EPSG:4326'"></aol-coordinate>
+                  </aol-geometry-point>
+                  <aol-style>
+                    <aol-style-icon [src]="markerImg" [anchor]="[0.5, 1]" [anchorXUnits]="'fraction'" [anchorYUnits]="'fraction'" [scale]="0.1"
+                                    [anchorOrigin]="'top-left'">
+                    </aol-style-icon>
+                  </aol-style>
+                </aol-feature>
+              </aol-source-vector>
+            </aol-layer-vector>
+          </aol-map>
+          </div>
+        </div>
+        <div *ngIf="isShowResult && !isFilterClicked" class="wrap-result row align-items-center">
+          <div class="col-1"></div>
+          <div class="col-10">
+            <fieldset *ngIf="isAvailable" class="p-2" style="border: 1px #28a745 solid">
+              <legend class="w-auto"><span class="badge badge-success">{{'Result' | translate}}</span></legend>
+              <p *ngIf="userInfo.status === 'none' && !isTimeValid"
+                 class="badge badge-danger">{{'Please choose another time!'}}</p>
+              <p *ngIf="userInfo.status !== 'none' && !isTimeValid"
+                 class="badge badge-danger">{{'You\'ve already booked'}}</p>
+              <p>
+                <fa-icon [icon]="faCheckCircle" [styles]="{'color': 'green'}"></fa-icon>
+                <span *ngIf="['CHECK_EXTENDING'].indexOf(newsObj.action) < 0"
+                      class="{{'text-success'}}">{{'Available' | translate}}</span>
+                <span *ngIf="['CHECK_EXTENDING'].indexOf(newsObj.action) >= 0"
+                      class="{{'text-success'}}">{{'CAN_BE_EXTENDED' | translate}}</span>
+                <button *ngIf="['CHECK_EXTENDING'].indexOf(newsObj.action) < 0"
+                        [disabled]="qrUrl || userInfo.status != 'none' || !isTimeValid" (click)="_book()"
+                        class="btn btn-sm btn-success float-right">{{'Booking' | translate}}</button>
+                <button *ngIf="['CHECK_EXTENDING'].indexOf(newsObj.action) >= 0" [disabled]="qrUrl" (click)="_extend()"
+                        class="btn btn-sm btn-success float-right">{{'Extend' | translate}}</button>
+              </p>
+            </fieldset>
+            <fieldset *ngIf="!isAvailable" class="p-2" style="border: 1px #dc3545 solid">
+              <legend class="w-auto"><span class="badge badge-danger">{{'Result' | translate}}</span></legend>
+              <fa-icon [icon]="faTimesCircle" [styles]="{'color': 'red'}"></fa-icon>
+              <span *ngIf="['CHECK_EXTENDING'].indexOf(newsObj.action) < 0" class="text-danger">{{'Not Available' | translate}}</span>
+              <span *ngIf="['CHECK_EXTENDING'].indexOf(newsObj.action) >= 0"
+                    class="text-danger">{{'CANNOT_BE_EXTENDED' | translate}}</span>
+              <button *ngIf="['CHECK_EXTENDING'].indexOf(newsObj.action) < 0" disabled
+                      class="btn btn-sm btn-primary float-right">{{'Booking' | translate}}</button>
+              <button *ngIf="['CHECK_EXTENDING'].indexOf(newsObj.action) >= 0" disabled
+                      class="btn btn-sm btn-primary float-right">{{'Extend' | translate}}</button>
+            </fieldset>
+          </div>
+          <div class="col-1"></div>
+        </div>
+        <div *ngIf="qrUrl" class="wrap-qr-code overflow-auto text-center">
+          <h3 *ngIf="!isFine">{{'QR_CODE' | translate}}</h3>
+          <h3 *ngIf="isFine">{{'QR_CODE_FINE' | translate}}</h3>
+          <img src="{{qrUrl}}" style="width: 50vw">
+        </div>
+        <div class="wrap-filter hide-this-{{!isFilterClicked}}">
+          <div class="abc row mr-0">
+            <mat-form-field class="pl-4 col-8">
+              <mat-icon [inline]="true" class="search-fn" matPrefix>location_searching</mat-icon>
+              <input matInput type="text" placeholder=" {{'Choose destination' | translate}}"
+                     [formControl]="parkingStationControl" [matAutocomplete]="destination">
+              <mat-autocomplete autoActiveFirstOption #destination="matAutocomplete">
+                <mat-option *ngFor="let add of filterparkingStationList | async" [value]="add.stationAddress">
+                  <span style="font-size: 14px">{{add.stationAddress}}</span>
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+            <div class="pl-0 col-4 d-flex align-items-center">
+
+            </div>
+          </div>
+          <div class="abc row mr-0">
+            <mat-form-field class="pl-4 col-8">
+              <mat-icon [inline]="true" class="search-fn" matPrefix>location_on</mat-icon>
+              <input matInput type="text" placeholder=" {{'Choose start location' | translate}}"
+                     (ngModelChange)="_suggestUserLocation($event)" [formControl]="userLocationControl"
+                     [matAutocomplete]="startLocation">
+              <mat-autocomplete autoActiveFirstOption #startLocation="matAutocomplete">
+                <mat-option *ngFor="let add of filterUserLocationList | async" [value]="add">
+                  <span style="font-size: 14px">{{add}}</span>
+                </mat-option>
+              </mat-autocomplete>
+
+            </mat-form-field>
+            <div class="pl-0 col-4 d-flex align-items-center">
+              <mat-checkbox style="font-size: small" [(ngModel)]="isCurrentLocationChecked"
+                            (click)="_getCurrentLocation()">{{'Your location' | translate}}</mat-checkbox>
+            </div>
+          </div>
+          <div class="abc row mr-0 ml-0">
+            <div class="badge badge-success">{{'Distance:' | translate}}{{' '+ distance + ' m'}}</div>
+<!--            <div class="col-6 badge badge-success">{{'Spend:' | translate}}{{' '}}{{(dur/60) > 60 ? (dur/3600) : (dur/60) | number:'1.1-2'}}{{(dur/60) > 60 ? ' hour'}}</div>-->
+          </div>
+          <mat-accordion [hideToggle]="true">
+            <mat-expansion-panel class="abc m-2" (opened)="display('up')" (closed)="display('down')">
+              <mat-expansion-panel-header style="font-size: 14px" class="row">
+                <mat-panel-title class="col-2 col-sm-2 p-0">
+                  {{'Package' | translate}}
+                </mat-panel-title>
+                <mat-panel-description class="col-8 col-sm-8 p-0 mr-0">
+                  <span>{{'Helps us to find available slot' | translate}}</span>
+                </mat-panel-description>
+                <mat-panel-description class="col-2 col-sm-2 p-0">
+                  <div class=" indicator{{'-'+ state}}">
+                    <mat-icon>keyboard_arrow_down</mat-icon>
+                  </div>
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+              <div class="row">
+                <ul class="col-12 col-sm-6 pr-0 list-group">
+                  <li class="list-group-item list-group-item-{{selectedPackage.value === p.value}}" (click)="onSelect(p)"
+                      *ngFor="let p of packageList">{{p.name | translate}}</li>
+                </ul>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+          <div class="abc time-picker row mt-3 ml-0 mr-0">
+            <mat-form-field class="col-6 start-time">
+              <input [owlDateTime]="startTime" [owlDateTimeTrigger]="startTime" matInput
+                     placeholder="{{'Start time' | translate}}"
+                     [(ngModel)]="leaveHomeTime" (ngModelChange)="_calArriveTime()">
+            </mat-form-field>
+            <owl-date-time pickerType="timer" #startTime></owl-date-time>
+
+            <mat-form-field class="col-6 ready-park-time">
+              <input [owlDateTime]="readyParkTime" [owlDateTimeTrigger]="readyParkTime" matInput
+                     placeholder="{{'Estimate park time' | translate}}"
+                     [(ngModel)]="arriveTime">
+            </mat-form-field>
+            <owl-date-time pickerType="timer" #readyParkTime></owl-date-time>
+          </div>
+          <div class="abc row">
+            <div class="col-6"></div>
+            <div class="col-6 text-center">
+              <button
+                [disabled]="!parkingStationControl.value || (!userLocationControl.value && !isCurrentLocationChecked) || !selectedPackage.name"
+                (click)="filter()" class="btn btn-sm btn-warning">{{'Done' | translate}}</button>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="userInfo.status.indexOf('paid') > -1" class="wrap-get-car-btn row">
+          <div class="col-8 text-center" style="padding: 0 40px">
+            <button [disabled]="!isUserNearStation" class="btn btn-sm btn-primary w-100"
+                    (click)="_checkLate()">{{'GET_CAR' | translate}}</button>
+          </div>
+          <div class="col-2 text-center">
+            <button class="btn btn-sm btn-primary w-100" (click)="_updateDistBetweenCurrentToDestination()">
+              <fa-icon [icon]="faSyncAlt" [styles]="{'color': 'white'}"></fa-icon>
+            </button>
+          </div>
+          <div class="col-12 text-center" style="padding: 0 40px">
+            <button class="btn btn-sm btn-warning w-100" (click)="toggleExtend()">{{'Extend' | translate}}</button>
+          </div>
+        </div>
+        <div *ngIf="userInfo.status.indexOf('staked') >= 0" class="wrap-feature-btn row">
+          <div class="col-8 text-center" style="padding: 0 40px">
+            <button [disabled]="!isUserNearStation || !isTimeCome" (click)="_park()"
+                    class="btn btn-sm btn-primary w-100">{{'Park' | translate}}</button>
+          </div>
+          <div class="col-2 text-center">
+            <button class="btn btn-sm btn-primary w-100" (click)="_updateDistBetweenCurrentToDestination()">
+              <fa-icon [icon]="faSyncAlt" [styles]="{'color': 'white'}"></fa-icon>
+            </button>
+          </div>
+          <div class="col-12 text-center" style="padding: 0 40px">
+            <button class="btn btn-sm btn-warning w-100" (click)="toggleExtend()">{{'Extend' | translate}}</button>
+          </div>
+          <div class="col-12 text-center" style="padding: 0 40px">
+            <button class="btn btn-sm btn-danger w-100" (click)="_cancel()">{{'Cancel' | translate}}</button>
+          </div>
+        </div>
+        <div class="row package-choice hide-this-{{!extend}}">
+          <mat-accordion [hideToggle]="true">
+            <mat-expansion-panel class="abc m-2" (opened)="display('up')" (closed)="display('down')">
+              <mat-expansion-panel-header style="font-size: 14px" class="row">
+                <mat-panel-title class="col-2 col-sm-2 p-0">
+                  <button [disabled]="!selectedPackage.name" class="btn btn-sm btn-primary btn-extend"
+                          (click)="_checkExtend()">{{'Done' | translate}}</button>
+                </mat-panel-title>
+                <mat-panel-description class="col-8 col-sm-8 p-0 mr-0">
+                  <span>{{'Please select extending package' | translate}}</span>
+                </mat-panel-description>
+                <mat-panel-description class="col-2 col-sm-2 p-0">
+                  <div class=" indicator{{'-'+ state}}">
+                    <mat-icon>keyboard_arrow_down</mat-icon>
+                  </div>
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+              <div class="row">
+                <ul class="col-12 col-sm-6 pr-0 list-group">
+                  <li class="list-group-item list-group-item-{{selectedPackage.value === p.value}}" (click)="onSelect(p)"
+                      *ngFor="let p of packageList">{{p.name | translate}}</li>
+                </ul>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+        <fa-icon class="position-fixed bars-icon" (click)="sidenav.open()" [icon]="faBars" size="2x"
+                 [styles]="{'color': 'black'}"></fa-icon>
+      </div>
+      <div *ngIf="newsObj.action !== ''" class="wrap-notification noti-{{notiStatus}}">
+        <div *ngIf="newsObj.billCode === '0'" class="alert alert-success mb-0 p-0 pl-1 pr-1">
+          <span>{{newsObj.action + '_SUCCESSFUL' | translate}}</span>
+          <fa-icon style="float: right" class="ml-4" [icon]="faTimes" (click)="_closePopup()"></fa-icon>
+        </div>
+        <div *ngIf="['0', '1006'].indexOf(newsObj.billCode) < 0" class="alert alert-danger mb-0 p-0 pl-1 pr-1">
+          <span>{{newsObj.action + '_FAILED' | translate}}</span>
+          <fa-icon style="float: right" class="ml-4" [icon]="faTimes" (click)="_closePopup()"></fa-icon>
+        </div>
+        <div *ngIf="['1006'].indexOf(newsObj.billCode) >= 0" class="alert alert-danger mb-0 p-0 pl-1 pr-1">
+          <span>{{newsObj.action | translate}}</span>
+          <fa-icon style="float: right" class="ml-4" [icon]="faTimes" (click)="_closePopup()"></fa-icon>
+        </div>
+      </div>
+      <div *ngIf="isConflict" class="wrap-notification-filter noti-{{notiStatus}}">
+        <div class="alert alert-danger mb-0 p-0 pl-1 pr-1">
+          <span>{{'CONFLICT_BOOK' | translate}}</span>
+          <fa-icon style="float: right" class="ml-4" [icon]="faTimes" (click)="_closePopup()"></fa-icon>
+        </div>
+      </div>
+<!--      <div class="wrap-station-result">-->
+<!--        <div class="station-name">{{station.stationAddress}}</div>-->
+<!--        <div class="station-address">{{station.addresss}}</div>-->
+<!--        <div *ngFor="let slot of station.slots" class="station-slot">-->
+<!--          <div *ngFor="let f of slot.future" class="station-future">-->
+<!--            .station-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

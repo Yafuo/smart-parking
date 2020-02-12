@@ -1,0 +1,76 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import "~ng-pick-datetime/assets/style/picker.min.css";
+body {
+  margin: 0;
+}
+header {
+  background-color: aqua;
+  padding: 20px;
+}
+mat-sidenav-container {
+  height: 100vh;
+}
+.signup-form, .login-form {
+  max-width: 320px;
+}
+mat-sidenav {
+  width: 157px;
+}
+.footer {
+  background-color: black;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+a {
+  text-decoration: underline;
+  &:hover {
+    color: white;
+  }
+}
+.wrap-content {
+  .bars-icon {
+    right: 0;
+    bottom: 0;
+  }
+  @media only screen and (min-device-width: 1024px) {
+    .mobile-wrapper {
+      padding: 0 20vw;
+    }
+    .bars-icon {
+      right: 25vw;
+      bottom: 0;
+    }
+  }
+  .wrap-symbol {
+    text-align: center;
+  }
+  .sidenav-opt {
+    border-bottom: 1px solid aqua;
+    padding: 10px 0;
+    .sidenav-opt-details {
+      padding-left: 25px;
+      margin-top: 10px;
+      border-top: 1px solid firebrick;
+    }
+  }
+}
+.indicator-down {
+  transform-origin: 50% 40%;
+  transition: transform .2s ease-in-out;
+}
+.indicator-up {
+  transform-origin: 50% 40%;
+  transform: rotate(180deg);
+  transition: transform .2s ease-in-out;
+}
+//mat-expansion-panel {
+//  .indicator {
+//    -webkit-transform: rotate(180deg);
+//    transform: rotate(180deg);
+//  }
+//}
+//@media only screen and (min-device-width: 576px) and (max-device-width: 768px) {
+//
+//}
