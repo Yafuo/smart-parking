@@ -67,6 +67,7 @@ export class HomeComponent implements OnInit {
   isFine = false;
   isConflict = false;
   station: any;
+  logs = [];
   //Maps API
   userCurrentCoor = {lat: 0, lon: 0};
   startCoorList = [];
@@ -497,6 +498,7 @@ export class HomeComponent implements OnInit {
     if (opt.indexOf('PAYMENT_LOG') >= 0) {
       this.http.post<any>('/api/get-log', {userName: this.userInfo.email}).subscribe(r => {
         console.log(r.result);
+        this.logs = r.result;
       });
     }
   }

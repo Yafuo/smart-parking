@@ -272,15 +272,50 @@
           <fa-icon style="float: right" class="ml-4" [icon]="faTimes" (click)="_closePopup()"></fa-icon>
         </div>
       </div>
-<!--      <div class="wrap-station-result">-->
-<!--        <div class="station-name">{{station.stationAddress}}</div>-->
-<!--        <div class="station-address">{{station.addresss}}</div>-->
-<!--        <div *ngFor="let slot of station.slots" class="station-slot">-->
-<!--          <div *ngFor="let f of slot.future" class="station-future">-->
-<!--            .station-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
+      <div class="wrap-station-result">
+        <div class="station-name">
+          <label>{{'STATION_NAME' | translate}}</label>
+          <span>{{station?.stationAddress}}</span>
+        </div>
+        <div class="station-address">
+          <label>{{'STATION_ADDRESS' | translate}}</label>
+          <span>{{station?.addresss}}</span>
+        </div>
+        <div *ngFor="let slot of station?.slots" class="station-slot">
+          <div *ngFor="let f of slot?.future" class="station-future">
+            <div class="slot-userName">
+              <label>{{'SLOT_USERNAME' | translate}}</label>
+              <span>{{f.userName}}</span>
+            </div>
+            <div class="slot-startTime">
+              <label>{{'SLOT_STARTTIME' | translate}}</label>
+              <span>{{f.startTime | date: 'HH:mm:ss, dd-MM-yyyy'}}</span>
+            </div>
+            <div class="slot-endTime">
+              <label>{{'SLOT_ENDTIME' | translate}}</label>
+              <span>{{f.endTime | date: 'HH:mm:ss, dd-MM-yyyy'}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngFor="let log of logs" class="wrap-payment-log">
+        <div class="log-userName">
+          <label>{{'LOG_USERNAME' | translate}}</label>
+          <span>{{log.userName}}</span>
+        </div>
+        <div class="log-time">
+          <label>{{'LOG_TIME' | translate}}</label>
+          <span>{{log.time}}</span>
+        </div>
+        <div class="log-action">
+          <label>{{'LOG_ACTION' | translate}}</label>
+          <span>{{log.actionName}}</span>
+        </div>
+        <div class="log-amount">
+          <label>{{'LOG_AMOUNT' | translate}}</label>
+          <span>{{log.amount}}</span>
+        </div>
+      </div>
     </mat-sidenav-content>
   </mat-sidenav-container>
 </div>
