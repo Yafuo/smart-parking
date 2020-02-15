@@ -7,7 +7,6 @@ import {map, startWith} from "rxjs/operators";
 import * as CryptoJS from "crypto-js";
 import {HttpClient} from "@angular/common/http";
 import * as io from 'socket.io-client';
-import {CookieService} from "ngx-cookie-service";
 import {EventBusService} from "../common/service/event-bus.service";
 import {Router} from "@angular/router";
 import {marker} from "./model/marker.image";
@@ -76,7 +75,7 @@ export class HomeComponent implements OnInit {
   suggestionList = ['phuong', 'cong vien', 'bệnh viện', 'tower', 'park'];
   markerImg = marker;
 
-  constructor(private translate: TranslateService, private router: Router, private render: Renderer2, private http: HttpClient, private cookieService: CookieService, private eventBus: EventBusService) {
+  constructor(private translate: TranslateService, private router: Router, private render: Renderer2, private http: HttpClient, private eventBus: EventBusService) {
   }
 
   ngOnInit() {
@@ -492,7 +491,7 @@ export class HomeComponent implements OnInit {
   navTo(opt: string) {
     if (opt.indexOf('LANGUAGE') >= 0) return;
     if (opt.indexOf('LOG_OUT') >= 0) {
-      this.cookieService.delete('token', '/', 'localhost');
+      document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/';
       this.router.navigate(['/']);
     }
     if (opt.indexOf('PAYMENT_LOG') >= 0) {
