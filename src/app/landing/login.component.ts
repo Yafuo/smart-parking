@@ -7,6 +7,7 @@ import {Router} from "@angular/router";
 import {NgxSpinnerService} from "ngx-spinner";
 import {TranslateService} from "@ngx-translate/core";
 import {EventBusService} from "../common/service/event-bus.service";
+import {AuthService} from "../auth.service";
 
 @Component({
   selector: 'app-login',
@@ -32,11 +33,11 @@ export class LoginComponent implements OnInit {
   userIconList = [this.faKey, this.faUser];
   user = new User('', '', '');
   constructor(private translate: TranslateService, private http: HttpClient
-              , private router: Router, private spinner: NgxSpinnerService, private eventBus: EventBusService) {
+              , private router: Router, private spinner: NgxSpinnerService, private eventBus: EventBusService, private authService: AuthService) {
   }
 
   ngOnInit() {
-    if (this.getCookies('token').length > 0) {
+    if (this.authService.isLoggedIn()) {
       this.router.navigate(['/home']);
     } else {
       this.spinner.show();
@@ -45,11 +46,6 @@ export class LoginComponent implements OnInit {
         this.spinner.hide();
       }, 600);
     }
-  }
-
-  getCookies(value: string): string {
-    const cookieKV = document.cookie.split(';').filter(pair => pair.indexOf(value) >= 0)[0]; // cookieKV <=> Cookie Key-Value pair
-    return cookieKV ? cookieKV.slice(cookieKV.indexOf('=') + 1) : '';
   }
 
   signin() {

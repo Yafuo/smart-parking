@@ -8,12 +8,12 @@ import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {AuthGuard} from "./auth.guard";
 import {AuthService} from "./auth.service";
-import {CookieService} from "ngx-cookie-service";
 import {TopPanelComponent} from "./common/top-panel/top-panel.component";
 import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {TranslateHttpLoader} from "@ngx-translate/http-loader";
 import {EventBusService} from "./common/service/event-bus.service";
+import {CookieService} from "./cookie.service";
 
 @NgModule({
   declarations: [

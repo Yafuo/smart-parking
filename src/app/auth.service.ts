@@ -1,21 +1,17 @@
 import { Injectable } from '@angular/core';
+import {CookieService} from "./cookie.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor() { }
+  constructor(private cookieService: CookieService) { }
 
   isLoggedIn() {
-    return this.getCookies('token').length > 0;
+    return this.cookieService.getCookies('token').length > 0;
 
   }
   isAdmin() {
-  }
-
-  getCookies(value: string): string {
-    const cookieKV = document.cookie.split(';').filter(pair => pair.indexOf(value) >= 0)[0]; // cookieKV <=> Cookie Key-Value pair
-    return cookieKV ? cookieKV.slice(cookieKV.indexOf('=') + 1) : '';
   }
 }

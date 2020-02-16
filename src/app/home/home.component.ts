@@ -10,6 +10,7 @@ import * as io from 'socket.io-client';
 import {EventBusService} from "../common/service/event-bus.service";
 import {Router} from "@angular/router";
 import {marker} from "./model/marker.image";
+import {CookieService} from "../cookie.service";
 
 @Component({
   selector: 'app-home',
@@ -75,7 +76,7 @@ export class HomeComponent implements OnInit {
   suggestionList = ['phuong', 'cong vien', 'bệnh viện', 'tower', 'park'];
   markerImg = marker;
 
-  constructor(private translate: TranslateService, private router: Router, private render: Renderer2, private http: HttpClient, private eventBus: EventBusService) {
+  constructor(private translate: TranslateService, private router: Router, private render: Renderer2, private http: HttpClient, private eventBus: EventBusService, private cookieService: CookieService) {
   }
 
   ngOnInit() {
@@ -491,7 +492,7 @@ export class HomeComponent implements OnInit {
   navTo(opt: string) {
     if (opt.indexOf('LANGUAGE') >= 0) return;
     if (opt.indexOf('LOG_OUT') >= 0) {
-      document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/';
+      this.cookieService.deleteCookie('token');
       this.router.navigate(['/']);
     }
     if (opt.indexOf('PAYMENT_LOG') >= 0) {

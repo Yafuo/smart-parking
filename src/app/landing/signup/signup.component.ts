@@ -4,8 +4,8 @@ import {faGithub} from "@fortawesome/free-brands-svg-icons";
 import {HttpClient} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {NgxSpinnerService} from "ngx-spinner";
-import {CookieService} from "ngx-cookie-service";
 import {TranslateService} from "@ngx-translate/core";
+import {AuthService} from "../../auth.service";
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
@@ -28,10 +28,10 @@ export class SignupComponent implements OnInit {
   list = [{opt: 'Sign in', details: []}, {opt: 'Language', details: this.langList}];
   user = new User('', '', '');
   isSignUp = 'none';
-  constructor(private http: HttpClient, private translate: TranslateService, private router: Router, private spinner: NgxSpinnerService, private cookieService: CookieService) { }
+  constructor(private http: HttpClient, private translate: TranslateService, private router: Router, private spinner: NgxSpinnerService, private authService: AuthService) { }
 
   ngOnInit() {
-    if (this.cookieService.check('token')) {
+    if (this.authService.isLoggedIn()) {
       this.router.navigate(['/home']);
     } else {
       this.spinner.show();
