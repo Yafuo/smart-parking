@@ -1,0 +1,28 @@
+.bg-stake {
+  //background-color: #007bff;
+  //background-image: linear-gradient(to bottom right, #28C2FF , #007bff);
+  background-image: linear-gradient(to bottom right, rgba(40,194,255,.5) , rgba(0,123,255,1));
+}
+.bg-extend {
+  //background-color: #ffc107;
+  //background-image: linear-gradient(to bottom right , #FFDF1A, #ffc107);
+  background-image: linear-gradient(to bottom right , rgba(255,223,26,.5), rgba(255,193,7,1));
+}
+.bg-punish {
+  //background-color: #dc3545;
+  //background-image: linear-gradient(to bottom right , #DC848A, #dc3545);
+  background-image: linear-gradient(to bottom right , rgba(220,132,138,.5), rgba(220,53,69,1));
+}
+.bg-log {
+  border: 5px solid white;
+  tr {
+    border: 1px solid black;
+  }
+}
+.wrap-log-false {
+  opacity: 100%;
+  transition: opacity 1s ease;
+}
+.wrap-log-true {
+  opacity: 0%;
+}

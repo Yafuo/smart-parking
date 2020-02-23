@@ -15,6 +15,7 @@ const app = express();
 var http = require('http');
 var server = http.createServer(app);
 var io = require('socket.io')(server);
+app.io = io;
 io.on('connection', function (socket) {
   console.log('You are connected!');
 });

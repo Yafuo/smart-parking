@@ -14,11 +14,17 @@ import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {TranslateHttpLoader} from "@ngx-translate/http-loader";
 import {EventBusService} from "./common/service/event-bus.service";
 import {CookieService} from "./cookie.service";
+import {ModalModule, PaginationModule} from "ngx-bootstrap";
+import {LogComponent} from "./home/log/log.component";
+import {FormsModule} from "@angular/forms";
+import {StationComponent} from "./home/station/station.component";
 
 @NgModule({
   declarations: [
     AppComponent,
-    TopPanelComponent
+    TopPanelComponent,
+    LogComponent,
+    StationComponent
   ],
   imports: [
     BrowserModule,
@@ -26,6 +32,9 @@ import {CookieService} from "./cookie.service";
     FontAwesomeModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    ModalModule.forRoot(),
+    PaginationModule.forRoot(),
+    FormsModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -35,7 +44,8 @@ import {CookieService} from "./cookie.service";
     })
   ],
   providers: [AuthGuard, AuthService, CookieService, EventBusService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [LogComponent, StationComponent]
 })
 export class AppModule { }
 export function HttpLoaderFactory(http: HttpClient) {

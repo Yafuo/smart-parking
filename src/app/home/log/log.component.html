@@ -1,0 +1,23 @@
+<div class="wrap-log-{{isTransitioning}}" [ngStyle]="{'height': itemsPerPage*100 + 'px'}">
+  <table *ngFor="let log of logsPerPage" class="w-100 bg-log bg-{{log.actionName}}">
+  <!--  <tr>-->
+  <!--    <th>{{'LOG_USERNAME' | translate}}</th>-->
+  <!--    <td>{{log.userName}}</td>-->
+  <!--  </tr>-->
+    <tr>
+      <th>{{'LOG_ACTION' | translate}}</th>
+      <td>{{log.actionName}}</td>
+    </tr>
+    <tr>
+      <th>{{'LOG_TIME' | translate}}</th>
+      <td>{{log.time}}</td>
+    </tr>
+    <tr>
+      <th>{{'LOG_AMOUNT' | translate}}</th>
+      <td>{{log.amount}}</td>
+    </tr>
+  </table>
+</div>
+<div>
+  <pagination [itemsPerPage]="itemsPerPage" [directionLinks]="false" (pageChanged)="gotoPage($event.page)" [totalItems]="logs?.length"></pagination>
+</div>

@@ -83,6 +83,7 @@
   "LOG_TIME": "Thanh toán lúc: ",
   "LOG_ACTION": "Loại: ",
   "LOG_AMOUNT": "Tổng thời gian: ",
+  "EMPTY_STATION": "Bãi đỗ xe trống",
   "DISTRICT": {
     "Tan Phu": "Tân Phú",
     "Tan Binh": "Tân Bình",

@@ -11,6 +11,9 @@ import {EventBusService} from "../common/service/event-bus.service";
 import {Router} from "@angular/router";
 import {marker} from "./model/marker.image";
 import {CookieService} from "../cookie.service";
+import {BsModalRef, BsModalService, ModalOptions} from "ngx-bootstrap";
+import {LogComponent} from "./log/log.component";
+import {StationComponent} from "./station/station.component";
 
 @Component({
   selector: 'app-home',
@@ -68,6 +71,8 @@ export class HomeComponent implements OnInit {
   isConflict = false;
   station: any;
   logs = [];
+  modal: BsModalRef;
+  modalConfig: ModalOptions = {};
   //Maps API
   userCurrentCoor = {lat: 0, lon: 0};
   startCoorList = [];
@@ -76,7 +81,7 @@ export class HomeComponent implements OnInit {
   suggestionList = ['phuong', 'cong vien', 'bệnh viện', 'tower', 'park'];
   markerImg = marker;
 
-  constructor(private translate: TranslateService, private router: Router, private render: Renderer2, private http: HttpClient, private eventBus: EventBusService, private cookieService: CookieService) {
+  constructor(private translate: TranslateService, private router: Router, private render: Renderer2, private http: HttpClient, private eventBus: EventBusService, private cookieService: CookieService, private modalService: BsModalService) {
   }
 
   ngOnInit() {
@@ -137,9 +142,9 @@ export class HomeComponent implements OnInit {
     }
   }
   private _searchStation() {
+    if (!this.allSearch.value) return;
     const selectedStationId = this.stationListInfo.filter(s => s.stationAddress.indexOf(this.allSearch.value) > -1)[0]._id;
     this.http.post<any>('/api/get-all-slot', {stationId: selectedStationId}).subscribe(r => {
-      console.log(r.result);
       this.station = r.result;
       this._getAddress(this.station.lat, this.station.lon);
     });
@@ -147,6 +152,11 @@ export class HomeComponent implements OnInit {
   private _getAddress(lat: any, lon: any) {
     this.http.get<any>(`https://nominatim.openstreetmap.org/reverse?key=iTzWSiYpGxDvhATNtSrqx5gDcnMOkntL&format=json&addressdetails=1&lat=${lat}&lon=${lon}`).subscribe(r => {
       this.station.address = r.display_name;
+      this.modalConfig.class = 'modal-sm';
+      this.modalConfig.initialState = {
+        station: this.station
+      };
+      this.modal = this.modalService.show(StationComponent, this.modalConfig);
     });
   }
   private _suggestUserLocation(event) {
@@ -497,8 +507,12 @@ export class HomeComponent implements OnInit {
     }
     if (opt.indexOf('PAYMENT_LOG') >= 0) {
       this.http.post<any>('/api/get-log', {userName: this.userInfo.email}).subscribe(r => {
-        console.log(r.result);
         this.logs = r.result;
+        this.modalConfig.class = 'modal-sm';
+        this.modalConfig.initialState = {
+          logs: this.logs
+        };
+        this.modal = this.modalService.show(LogComponent, this.modalConfig);
       });
     }
   }

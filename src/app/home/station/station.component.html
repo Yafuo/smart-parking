@@ -1,0 +1,22 @@
+<div class="wrap-station">
+  <p style="font-size: smaller">{{station.stationAddress}}</p>
+  <p>{{station.address}}</p>
+    <div class="bg-station" *ngFor="let slot of station.slots">
+      <table *ngFor="let future of slot.future">
+        <tr class="border border-dark">
+          <th>{{'USERNAME' | translate}}</th>
+          <td>{{future.userName}}</td>
+        </tr>
+        <tr class="border border-dark">
+          <th>{{'START_TIME' | translate}}</th>
+          <td>{{future.startTime | date: 'dd-MM-yyyy HH:mm:ss'}}</td>
+        </tr>
+        <tr class="border border-dark">
+          <th>{{'END_TIME' | translate}}</th>
+          <td>{{future.endTime | date: 'dd-MM-yyyy HH:mm:ss'}}</td>
+        </tr>
+      </table>
+      <div class="font-weight-bold">{{slot._id}}</div>
+    </div>
+  <div *ngIf="!station.slots[0].future">{{'EMPTY_STATION' | translate}}</div>
+</div>
