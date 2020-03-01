@@ -1,4 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {faTimes} from "@fortawesome/free-solid-svg-icons";
+import {BsModalRef} from "ngx-bootstrap";
 
 @Component({
   selector: 'app-station',
@@ -7,11 +9,16 @@ import {Component, Input, OnInit} from '@angular/core';
 })
 export class StationComponent implements OnInit {
 
+  faTimes = faTimes;
   station: any;
-  constructor() { }
+  constructor(private modalRef: BsModalRef) { }
 
   ngOnInit() {
     console.log(this.station.slots);
+  }
+
+  close() {
+    this.modalRef.hide();
   }
 
 }

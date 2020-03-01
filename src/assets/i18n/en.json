@@ -84,6 +84,8 @@
   "LOG_ACTION": "Type: ",
   "LOG_AMOUNT": "Duration: ",
   "EMPTY_STATION": "Station is empty",
+  "START_TIME": "Start at: ",
+  "END_TIME": "End at: ",
   "DISTRICT": {
     "Tan Phu": "Tan Phu",
     "Tan Binh": "Tan Binh",

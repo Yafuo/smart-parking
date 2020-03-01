@@ -1,6 +1,10 @@
 .bg-station {
   border: 5px solid white;
-  display: inline-flex;
+  display: flex;
+  flex-direction: column-reverse;
+  table {
+    border: 5px solid black;
+  }
   tr {
     border: 1px solid black;
   }

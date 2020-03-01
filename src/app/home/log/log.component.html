@@ -1,4 +1,7 @@
-<div class="wrap-log-{{isTransitioning}}" [ngStyle]="{'height': itemsPerPage*100 + 'px'}">
+<div class="wrap-log-{{isTransitioning}}" [ngStyle]="{'height': itemsPerPage*100 + 'px', 'overflow': 'scroll'}">
+  <p style="font-size: small">
+    <span style="background-color: aliceblue" class="float-right p-1" (click)="close()"><fa-icon [icon]="faTimes" [styles]="{'color': 'red'}"></fa-icon></span>
+  </p>
   <table *ngFor="let log of logsPerPage" class="w-100 bg-log bg-{{log.actionName}}">
   <!--  <tr>-->
   <!--    <th>{{'LOG_USERNAME' | translate}}</th>-->

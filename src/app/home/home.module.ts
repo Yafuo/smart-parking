@@ -14,6 +14,7 @@ import {
 import {MatRadioModule} from "@angular/material/radio";
 import {OwlDateTimeModule, OwlNativeDateTimeModule} from "ng-pick-datetime";
 import {AngularOpenlayersModule} from "ngx-openlayers";
+import {NgxSpinnerModule} from "ngx-spinner";
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import {AngularOpenlayersModule} from "ngx-openlayers";
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
     AngularOpenlayersModule,
-    AlertModule.forRoot()
+    AlertModule.forRoot(),
+    NgxSpinnerModule
   ],
   providers: []
 })

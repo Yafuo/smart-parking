@@ -68,6 +68,9 @@ a {
 .modal-sm {
   width: 324px;
   margin: 0 auto;
+  @media screen and (max-width: 320px) {
+    width: 295px;
+  }
 }
 .pagination {
   justify-content: center;

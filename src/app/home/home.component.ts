@@ -14,6 +14,7 @@ import {CookieService} from "../cookie.service";
 import {BsModalRef, BsModalService, ModalOptions} from "ngx-bootstrap";
 import {LogComponent} from "./log/log.component";
 import {StationComponent} from "./station/station.component";
+import {NgxSpinnerService} from "ngx-spinner";
 
 @Component({
   selector: 'app-home',
@@ -81,10 +82,11 @@ export class HomeComponent implements OnInit {
   suggestionList = ['phuong', 'cong vien', 'bệnh viện', 'tower', 'park'];
   markerImg = marker;
 
-  constructor(private translate: TranslateService, private router: Router, private render: Renderer2, private http: HttpClient, private eventBus: EventBusService, private cookieService: CookieService, private modalService: BsModalService) {
+  constructor(private translate: TranslateService, private router: Router, private render: Renderer2, private http: HttpClient, private eventBus: EventBusService, private cookieService: CookieService, private modalService: BsModalService, private spinner: NgxSpinnerService) {
   }
 
   ngOnInit() {
+    this.spinner.hide();
     this._getCurrentLocation();
     this._getAllPackage();
     this._getAllStation();
@@ -233,6 +235,7 @@ export class HomeComponent implements OnInit {
     });
   }
   private _updateDistBetweenCurrentToDestination() {
+    this.spinner.show();
     if (this.userInfo.stationId === 0) return;
     const endPoint = this.stationListInfo.filter(s => s._id === this.userInfo.stationId)[0];
     let u = `https://routing.openstreetmap.de/routed-car/route/v1/driving/${this.userCurrentCoor.lon},${this.userCurrentCoor.lat};${endPoint.lon},${endPoint.lat}?overview=false&geometries=polyline&steps=true`;
@@ -240,6 +243,7 @@ export class HomeComponent implements OnInit {
       this.isUserNearStation = r.routes[0].distance < 5;
       const currentTime = new Date(Date.now());
       this.isTimeCome = this.userInfo.startTime.getHours() - currentTime.getHours() === 0 && this.userInfo.startTime.getMinutes() - currentTime.getMinutes() <= 0;
+      this.spinner.hide();
     });
   }
   private _getCurrentLocation() {
