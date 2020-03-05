@@ -114,7 +114,7 @@ export class HomeComponent implements OnInit {
       );
     });
   }
-  private _calArriveTime() {
+  _calArriveTime() {
     if ((!this.userLocationControl.value && !this.isCurrentLocationChecked) || !this.parkingStationControl.value) return;
     const index = this.userLocation.indexOf(this.userLocationControl.value);
     const startPoint = this.isCurrentLocationChecked ? this.userCurrentCoor : this.startCoorList[index];
@@ -143,7 +143,7 @@ export class HomeComponent implements OnInit {
       return this.stationListInfo.filter(d => d.stationAddress.toLowerCase().indexOf(filterValue) > -1);
     }
   }
-  private _searchStation() {
+  _searchStation() {
     if (!this.allSearch.value) return;
     const selectedStationId = this.stationListInfo.filter(s => s.stationAddress.indexOf(this.allSearch.value) > -1)[0]._id;
     this.http.post<any>('/api/get-all-slot', {stationId: selectedStationId}).subscribe(r => {
@@ -161,7 +161,7 @@ export class HomeComponent implements OnInit {
       this.modal = this.modalService.show(StationComponent, this.modalConfig);
     });
   }
-  private _suggestUserLocation(event) {
+  _suggestUserLocation(event) {
     if (this.suggestionList.filter(sug => event.indexOf(sug) > -1).length === 0) return;
     event = event.replace(/ /g, "%20");
     let u= `https://nominatim.openstreetmap.org/search?q=${event}&format=json&polygon=1&addressdetails=1`;
@@ -246,7 +246,7 @@ export class HomeComponent implements OnInit {
       this.spinner.hide();
     });
   }
-  private _getCurrentLocation() {
+  _getCurrentLocation() {
     navigator.geolocation.getCurrentPosition(pos => {
       this.userCurrentCoor.lat = pos.coords.latitude;
       this.userCurrentCoor.lon = pos.coords.longitude;
@@ -339,7 +339,7 @@ export class HomeComponent implements OnInit {
       this.qrUrl = r.qrCodeUrl ? prefix + r.qrCodeUrl.slice(42) : '';
     });
   }
-  private _checkExtend() {
+  _checkExtend() {
     this.extend = false;
     const index = this.stationListInfo.filter(s => s.stationAddress.indexOf(this.selectedParkingStation) > -1)[0]._id;
     var date = Date.now().toString(10);
@@ -406,7 +406,7 @@ export class HomeComponent implements OnInit {
       this._showPopup();
     });
   }
-  private filter() {
+  filter() {
     this.toggleFilter();
     this.isTimeValid = this.leaveHomeTime > new Date(Date.now());
     this.selectedParkingStation = this.parkingStationControl.value;
