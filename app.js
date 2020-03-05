@@ -35,8 +35,12 @@ app.use(cookieParser());
 // *
 
 // ****
-mongoose.connect('mongodb://localhost:27017/real'
-  , {useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true}).then(r => {
+// mongoose.connect('mongodb://localhost:27017/real'
+//   , {useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true}).then(r => {
+//   console.log('Database connect successfully');
+// }).catch(err => console.log(err));
+mongoose.connect('mongodb+srv://Yafuo:phuanhdai@node-smart-parking-btryk.mongodb.net/real?retryWrites=true&w=majority'
+    , {useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true}).then(r => {
   console.log('Database connect successfully');
 }).catch(err => console.log(err));
 // *

@@ -86,6 +86,8 @@
   "EMPTY_STATION": "Bãi đỗ xe trống",
   "START_TIME": "Bắt đầu: ",
   "END_TIME": "Kết thúc: ",
+  "CHECK_EXTENDING_SUCCESSFUL": "Có quyền gia hạn",
+  "CHECK_EXTENDING_FAILED": "Không có quyền gia hạn",
   "DISTRICT": {
     "Tan Phu": "Tân Phú",
     "Tan Binh": "Tân Bình",

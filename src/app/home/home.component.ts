@@ -5,7 +5,7 @@ import {FormControl} from "@angular/forms";
 import {Observable} from "rxjs";
 import {map, startWith} from "rxjs/operators";
 import * as CryptoJS from "crypto-js";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import * as io from 'socket.io-client';
 import {EventBusService} from "../common/service/event-bus.service";
 import {Router} from "@angular/router";
@@ -24,7 +24,7 @@ import {NgxSpinnerService} from "ngx-spinner";
 })
 export class HomeComponent implements OnInit {
 
-  domain = 'http://c70d43af.ngrok.io';
+  domain = 'https://113.172.148.4:8080';
   faBars = faBars;
   faPowerOff = faPowerOff;
   faChevronLeft =faChevronLeft;
@@ -120,7 +120,9 @@ export class HomeComponent implements OnInit {
     const startPoint = this.isCurrentLocationChecked ? this.userCurrentCoor : this.startCoorList[index];
     const endPoint = this.stationListInfo.filter(s => s.stationAddress.indexOf(this.parkingStationControl.value) > -1)[0];
     let u = `https://routing.openstreetmap.de/routed-car/route/v1/driving/${startPoint.lon},${startPoint.lat};${endPoint.lon},${endPoint.lat}?overview=false&geometries=polyline&steps=true`;
-    this.http.get<any>(u).subscribe(r => {
+    let header = new HttpHeaders();
+    header = header.set('Content-type', 'application/json; charset=utf-8');
+    this.http.get<any>(u, {headers: header}).subscribe(r => {
       this.distance = r.routes[0].distance;
       this.dur = r.routes[0].duration;
       let temp = new Date(this.leaveHomeTime);
@@ -193,7 +195,7 @@ export class HomeComponent implements OnInit {
     });
   }
   private _alwaysListenToChange() {
-    this.socket = io.connect('https://localhost:8080');
+    this.socket = io.connect('https://113.172.148.4:8080');
     this.socket.on('news', (news: any) => {
       if (this.userInfo.status !== 'none' || news.userId === this.userInfo.email || news.stationId !== this.stationListInfo.filter(s => s.stationAddress.indexOf(this.selectedParkingStation) > -1)[0]._id) {
         console.log('wrong condition');
@@ -214,11 +216,13 @@ export class HomeComponent implements OnInit {
     this.socket.on(`${this.userInfo.email.slice(0, this.userInfo.email.indexOf('@'))}-news`, (news: any) => {
       console.log(news);
       this.qrUrl = '';
-      this.isShowResult = false;
       this.newsObj = news;
       if (this.newsObj.action === 'FINE') this._getCar();
-      if (this.newsObj.action!=='CHECK_EXTENDING') this._showPopup();
-      if (this.newsObj.action!=='CHECK_EXTENDING') this.selectedPackage = {name: '', cost: '', value: 0};
+      if (this.newsObj.action!=='CHECK_EXTENDING') {
+        this.isShowResult = false;
+        this._showPopup();
+        this.selectedPackage = {name: '', cost: '', value: 0};
+      }
       if (this.userInfo.status.indexOf('staked') >= 0) this._getUserInfo();
     });
     this.socket.on(`${this.userInfo.email.slice(0, this.userInfo.email.indexOf('@'))}-user-status`, (json: any) => {
@@ -236,13 +240,18 @@ export class HomeComponent implements OnInit {
   }
   private _updateDistBetweenCurrentToDestination() {
     this.spinner.show();
-    if (this.userInfo.stationId === 0) return;
+    if (this.userInfo.stationId === 0) {
+      this.spinner.hide();
+      return;
+    }
     const endPoint = this.stationListInfo.filter(s => s._id === this.userInfo.stationId)[0];
     let u = `https://routing.openstreetmap.de/routed-car/route/v1/driving/${this.userCurrentCoor.lon},${this.userCurrentCoor.lat};${endPoint.lon},${endPoint.lat}?overview=false&geometries=polyline&steps=true`;
-    this.http.get<any>(u).subscribe(r => {
-      this.isUserNearStation = r.routes[0].distance < 5;
+    let header = new HttpHeaders();
+    header = header.set('Content-type', 'application/json; charset=utf-8');
+    this.http.get<any>(u, {headers: header}).subscribe(r => {
+      this.isUserNearStation = r.routes[0].distance < 500;
       const currentTime = new Date(Date.now());
-      this.isTimeCome = this.userInfo.startTime.getHours() - currentTime.getHours() === 0 && this.userInfo.startTime.getMinutes() - currentTime.getMinutes() <= 0;
+      this.isTimeCome = this.userInfo.startTime.getHours() - currentTime.getHours() <= 1 && this.userInfo.startTime.getMinutes() - currentTime.getMinutes() <= 0;
       this.spinner.hide();
     });
   }

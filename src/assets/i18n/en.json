@@ -86,6 +86,8 @@
   "EMPTY_STATION": "Station is empty",
   "START_TIME": "Start at: ",
   "END_TIME": "End at: ",
+  "CHECK_EXTENDING_SUCCESSFUL": "Yes, you can extend",
+  "CHECK_EXTENDING_FAILED": "No, you can't extend",
   "DISTRICT": {
     "Tan Phu": "Tan Phu",
     "Tan Binh": "Tan Binh",

@@ -349,7 +349,7 @@ router.post('/check-slot-extendable', (req, res, next) => {
             }
         }
         if (flag) {
-            req.app.io.emit(`${userName.slice(0,userName.indexOf('@'))}-news`, {billMsg: '', billCode: '', action: 'CHECK_EXTENDING'});
+            req.app.io.emit(`${userName.slice(0,userName.indexOf('@'))}-news`, {billMsg: '', billCode: '0', action: 'CHECK_EXTENDING'});
             res.json({result: 'CAN_EXTEND'});
             return;
         }
@@ -849,6 +849,7 @@ function logger(userName, actionName, amount, date) {
             newLog.save().then(r => {
                 if (!r) {
                     console.log('SAVE_LOG_SUCCESSFUL');
+                    return;
                 }
                 console.log('SAVE_LOG_FAILED');
             }).catch(err => {
