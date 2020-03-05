@@ -13,7 +13,13 @@ var cookieParser = require('cookie-parser');
 const app = express();
 // **** + Line 29
 var http = require('http');
-var server = http.createServer(app);
+var https = require('https');
+var fs = require('fs');
+var options = {
+  key: fs.readFileSync('ssl/server.key'),
+  cert: fs.readFileSync('ssl/server.crt')
+};
+var server = https.createServer(options, app);
 var io = require('socket.io')(server);
 app.io = io;
 io.on('connection', function (socket) {

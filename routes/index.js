@@ -684,7 +684,7 @@ router.post('/reset-password', (req, res, next) => {
     var email = req.body.receiverMail;
     var secretKey = '1234qwer';
     var encryptEmail = crypto.AES.encrypt(email, secretKey);
-    var encryptUrl = `http://localhost:4200/landing/password_reset?email=${encryptEmail}`;
+    var encryptUrl = `https://113.172.148.4:8080/landing/password_reset?email=${encryptEmail}`;
     User.findOne({email: email}).then(r => {
         if (!r) {
             res.json({result: 'NOT_SIGNUP_YET'});

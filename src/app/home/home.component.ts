@@ -193,7 +193,7 @@ export class HomeComponent implements OnInit {
     });
   }
   private _alwaysListenToChange() {
-    this.socket = io.connect('http://localhost:8080');
+    this.socket = io.connect('https://localhost:8080');
     this.socket.on('news', (news: any) => {
       if (this.userInfo.status !== 'none' || news.userId === this.userInfo.email || news.stationId !== this.stationListInfo.filter(s => s.stationAddress.indexOf(this.selectedParkingStation) > -1)[0]._id) {
         console.log('wrong condition');
